@@ -1,51 +1,51 @@
-#CS473 Adv. Algorithms Final Project Group Eagles
-#Aaron Borjas, Connor Weldy, Jorjei Ngoche
-#In this project, we are aiming to complete a scheduling problem using graph coloring. In our situation, we are aiming to schedule classes for
-#a single department of a university. We consider professors, classes, classrooms, and timeslots to complete this problem. 
-#We have two methods that we are aiming to accomplish: prioritizing student constraints (e.g. classes earlier in the day, no conflicting classes) and prioritizing professor '
-#   constraints (e.g. preferred classes to teach).
+# CS473 Adv. Algorithms Final Project Group Eagles
+# Aaron Borjas, Connor Weldy, Jorjei Ngoche
+# In this project, we are aiming to complete a scheduling problem using graph coloring. In our situation, we are aiming to schedule classes for
+# a single department of a university. We consider professors, classes, classrooms, and timeslots to complete this problem. 
+# We have two methods that we are aiming to accomplish: prioritizing student constraints (e.g. classes earlier in the day, no conflicting classes) 
+# and prioritizing professors' constraints (e.g. preferred classes to teach).
+
+'''
+0. prof constraints {'p1': ['c7', 'c1', 'c4'], 'p2': {'c5', 'c2'}, 'p3': {'c3', 'c6'}}
+1. class constraints: {c7: {c1, c5}, c5: {c7,c1}, c1: {c7,c5}}
+2. class const: [('c1', 'c3'), ('c2','c3')]
+
+3. combine structre {c7: {c1, c5}, c5: {c7,c1}, c1: {c7,c5, c3}}
+
+4. copy the value sets to a list
+'''
 
 import math
 import random
+from graph_color import *
+from course import *
+from course_constrainer import *
 
-# create_graph_coloring_greedy function - colors a graph using a greedy algorithm. uses https://iq.opengenus.org/graph-colouring-greedy-algorithm/ as a reference
-# input: an dictionary adjacency list representation of a graph, where the vertices are classes and edges are incompatibilities. 
-#        e.g. c1---c2 means c1 and c2 can't be at the same time
-#        the input graph may look like: {1: [2, 4], 2: [3], 3: [1], 4: [1]}
-# output: returns a dictionary where keys are vertices and values are letters (colors)
-#         output may look like {1: a, 2: b, 3: c, 4: b} for the above sample graph
-def create_graph_coloring_greedy(adj_list):
-    print("hello world")
+#TODO intialize elsewhere (not in main.py)
+### Driver code
+course_constr = Course_Constrainer()
+course_constr.add_courses(['C1','C4','C7','C2','C5','C8','C3','C6'])
+profs = ['P1', 'P2', 'P3']
+class_constraints = [('C1', 'C4'), ('C2', 'C7'), ('C6', 'C8'), ('C1', 'C8')]
+course_constr.add_profs(profs)
+course_constr.add_course_constraints(class_constraints)
 
-# random_assign_class_to_profs function
-# Purpose: assign classes to profs in a random fashion, equally distributing classes to profs
-# input: list of classes
-#        list of profs
-# output: dictionary containing profs as keys and values as list of classes
-def random_assign_class_to_profs(class_list, prof_list):
-    prof_to_class_dict = {}
-    random.shuffle(class_list) # shuffle the classes in class_list for randomization :)
-    print(classes)
-    #https://stackoverflow.com/questions/53144723/python-evenly-distribute-value-to-a-list-in-a-dictionary  
-    #Lst[ Initial : End : IndexJump ]
-    # for (index of prof) and (prof) in prof_list => (0, seq[0]), (1, seq[1]), (2, seq[2]), ...
-    for idx, prof in enumerate(prof_list):
-        # gets every (number of profs)th class in class list and adds to list stored in value of dictionary
-        prof_to_class_dict[prof] = class_list[idx::len(prof_list)]
-    return prof_to_class_dict
 
-classes = ['c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7']
-profs = ['p1', 'p2', 'p3']
+x = course_constr.gen_graph()
+print(x)
+#create_graph_coloring_greedy(x)
 
-print(random_assign_class_to_profs(classes, profs))
+# # Assign classes to profs randomly
+# prof_to_class_dict = random_assign_class_to_profs(classes, profs)
+# print(prof_to_class_dict)
 
-# pref_assign_class_to_profs function
-# Purpose: assign classes to profs using professor preferences, attempting to equally distribute classes to profs
-# input: list of classes
-#        list of profs
-#        professor preferences
-# output: dictionary containing profs as keys and values as list of classes
-def pref_assign_class_to_profs(class_list, prof_list, prof_preferences):
-    prof_to_class_dict = {}
-    return prof_to_class_dict
+# # generate graph adjacency list with both implicit and explicit
+# graph_adj_list = gen_graph(prof_to_class_dict, class_constraints)
+# print(graph_adj_list)
 
+
+# class2 = Course()
+# class1 = Course('p1', 'blue')
+# print(helloworld()) #LIAR
+# print(class1, class2)
+#print(class2.color)
