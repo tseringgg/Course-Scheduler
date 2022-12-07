@@ -14,6 +14,48 @@
 
 4. copy the value sets to a list
 '''
+#using sample data from Nate Moyer for CS 2023-2024 school year...
+'''
+Profs: Kent Jones, Qian Mao, Scott Griffith, Matt Bell, Pete Tucker (5 total)
+
+Classes (fall): 
+    CS125 x2, CS171 x4, CS172 x1, CS200 x1, CS273 x2, CS274 x1, CS278 x1, CS313 x1, 
+    CS333 x1, CS344 x1, CS359 x1, CS370 x1, CS373 x1, CS374 x1, CS471 x1, CS473 x1
+    21 total classes in the fall
+
+
+Classes (spring): 
+    CS125 x2, CS171 x2, CS172 x2, CS251 x1, CS273 x1, CS274 x1, CS278 x1, CS314 x1,
+    CS374 x1, CS375 x1, CS378 x1, CS401 x1, CS457 x1, CS472 x1, CS475 x1
+    18 total classes offered in the spring
+
+
+Time slots (fall): 
+    MWF - 8-8:55am, 9:05-10am, 10:25-11:20am, 11:45am-12:40pm, 12:50-1:45pm (5 timeslots)
+    TTh - 8-9:20am, 9:30-10:50am, 12:50-2:50pm, 4-6pm, 6-6:55pm (5 timeslots)
+Time slots (spring):
+    MWF - 8-8:55am, 9:05-10am, 10:25am-11:20am, 11:45am-12:40pm, 12:50-1:45pm, 1:55-2:10pm, 6:30-9pm (7 timeslots)
+    TTH - 8-9:20am, 9:30-10:50am, 12:50-2:10pm, 2:20-3:40pm (4 timeslots)
+'''
+'''
+Profs: Kelsey Marcinko, Lindy Moyer, Martha Gady, Diana Schepens, Jordan Broussard, Nate Moyer, Immanual Manohar,
+       Molly Lamb, Steve Gady, Lyle Cochran (10 total)
+
+Classes (fall): 
+    MA/CS294, MA/CS499, MA107 x2, MA108 x2, MA130, MA150 x2, MA171 x4, MA172 x2, MA221, MA222, MA256 x2,
+    MA273 x2, MA278, MA281, MA306, MA330, MA357, MA410
+Classes (spring): 
+    MA107, MA108, MA130, MA150, MA158, MA171 x2, MA172 x3, MA221, MA222, MA256 x3, MA273, MA278, MA281, 
+    MA330, MA350, MA358, MA365, MA411, MA430
+
+Time slots (fall):
+    MWF - 8-8:55am, 9:05-10am, 10:25-11:20am, 11:45am-12:40pm, 12:50-1:45pm, 1:55-2:50pm (6 timeslots)
+    TTH - 8-9:20am, 9:30-10:50am (2 timeslots)
+Time slots (spring):
+    MWF - 8-8:55am, 9:05-10am, 10:25-11:20am, 11:45am-12:40pm, 12:50-1:45pm, 1:55-2:50pm (6 timeslots)
+    TTH - 8-9:20am, 9:30-10:50am (2 timeslots)
+'''
+
 
 import math
 import random
@@ -33,6 +75,8 @@ course_constr.add_course_constraints(class_constraints)
 
 x = course_constr.gen_graph()
 print(x)
+
+
 #create_graph_coloring_greedy(x)
 
 # # Assign classes to profs randomly
