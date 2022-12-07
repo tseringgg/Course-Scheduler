@@ -49,6 +49,7 @@ class Course_Constrainer:
         for idx, prof in enumerate(self.prof_list):
             # gets every (number of profs)th class in class list and adds to list stored in value of dictionary
             prof_to_class_dict[prof] = self.course_list[idx::len(self.prof_list)]
+        
         return prof_to_class_dict
         
     # pref_assign_class_to_profs function
@@ -70,10 +71,11 @@ class Course_Constrainer:
         # Transforming professor constraints to class constraints:
         # for all lists in the prof_constraints dictionary values
         prof_constraints = self.__random_assign_class_to_profs()
-        for prof_courses in prof_constraints.values():
+        for prof, prof_courses in prof_constraints.items():
             # for every node listed in the list
             for course in prof_courses:
                 # for all other nodes in the list
+                course.set_professor(prof)
                 for other_course in prof_courses:
                     # add to adjacency list for node
                     if (other_course != course) and (other_course not in course.neighbors):

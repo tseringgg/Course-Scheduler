@@ -4,7 +4,7 @@ class Course:
     def __init__(self, course_id='default course'):
         self.course_id = course_id
         self.professor = 'no professor'
-        self.timeslot = 'none' # color in graph
+        self.timeslot = -1 # color in graph
         self.room = -1
         self.neighbors = [] #list of classes that cannot be at the same time as the current instance
     
@@ -15,7 +15,7 @@ class Course:
     
     def __str__(self):
         #return self.course_id
-        return f"Prof: {self.professor}, Timeslot: {self.timeslot}, Room: {self.room}"
+        return f"Course: {self.course_id}, Prof: {self.professor}, Timeslot: {self.timeslot}, Room: {self.room}"
     
     def add_neighbor(self, course):
         self.neighbors.append(course)
@@ -34,3 +34,13 @@ class Course:
     
     def get_neighbors(self):
         return self.neighbors
+
+    def get_timeslot(self):
+        return self.timeslot
+    
+    def get_neighbor_timeslots(self):
+        neighbor_timeslots = set()
+        for n in self.neighbors:
+            neighbor_timeslots.add(n.timeslot)
+        return neighbor_timeslots
+        
