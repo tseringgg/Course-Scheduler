@@ -28,3 +28,9 @@ class Course:
     
     def set_room(self, room):
         self.room = room
+
+    def get_room(self):
+        return self.room
+    
+    def get_neighbors(self):
+        return self.neighbors
