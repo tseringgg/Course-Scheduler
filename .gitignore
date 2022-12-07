@@ -1,5 +1,7 @@
+!.gitignore
 bin/*
 .vscode/*
 *.exe
 *.json
 ~$*
+/source/__pycache__
