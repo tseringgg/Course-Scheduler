@@ -76,7 +76,7 @@ course_constr.add_course_constraints(class_constraints)
 x = course_constr.gen_graph()
 print(x)
 
-create_graph_coloring_greedy(x, 2) #graph color with limited number of timeslots
+create_graph_coloring_greedy(x, 2, 2) #graph color with limited number of timeslots
 
 for course in x:
     print(course)

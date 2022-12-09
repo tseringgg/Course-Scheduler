@@ -7,15 +7,17 @@ from course import *
 #inputs - current course class that doesn't have a room assigned, number of rooms available, 
 #         number of rooms available in total as an integer, and a list of neighbors to the course
 #outputs - no return values but sets the room value of the current course (colors it)
+# Overall time complexity: O(V^2), where V is the # of adjacent vertices 
 def set_timeslot(current_course, num_avail_timeslots, neighbor_timeslot):
     max_timeslot = 0
-    #while current_course.get_room() == -1: #while the course's room not set
-    for timeslot in range(1,num_avail_timeslots+1):
+    
+    #worse case - min(neighbors of curr course, num_avail_timeslots) -> O(E) E + 1
+    for timeslot in range(1,num_avail_timeslots+1): #at worst O(n), n = num_avail_timeslots
 
         # check how many times timeslot has been used
         #number_of_times(timeslot) < rooms_available:
         
-        if timeslot not in neighbor_timeslot:
+        if timeslot not in neighbor_timeslot: #avg case O(1), worse case O(V) efficiency (hashing collisions)
             current_course.set_timeslot(timeslot)
             max_timeslot = timeslot
             break # gets lowest available timeslot
@@ -33,7 +35,7 @@ def set_timeslot(current_course, num_avail_timeslots, neighbor_timeslot):
 #        later we can implement stuff like time slots available and rooms available
 # output: returns a set of Courses, with all items having the color assigned using graph
 #           coloring methods.
-def create_graph_coloring_greedy(adj_list, num_avail_rooms):
+def create_graph_coloring_greedy(adj_list, num_avail_timeslots, num_rooms):
     
     # Color first vertex with first color
     # Repeat following for V-1 times:
@@ -60,14 +62,14 @@ def create_graph_coloring_greedy(adj_list, num_avail_rooms):
     #adj_list[0].set_room(1)
     bfs_queue = []
     visited = set()
-    for course in adj_list: #make sure we cover all the courses
+    for course in adj_list: #make sure we cover all the courses -> O(V) if fully disconnected
         if course.get_room() == -1: # if course does not have a room yet
             bfs_queue.append(course) # add to end of queue
-        while bfs_queue: #while the queue isnt empty
+        while bfs_queue: #while the queue isnt empty -> O(V) if fully connected
             print(f"queue: {bfs_queue}")
             current_course = bfs_queue.pop(0) # get first course from queue
             visited.add(current_course)
-            if current_course.get_room() == -1: # if course does not have a room yet
+            if current_course.get_timeslot() == -1: # if course does not have a room yet
                 # Get rooms of neighbors:
                 neighbor_timeslot = current_course.get_neighbor_timeslots()
 
@@ -75,10 +77,11 @@ def create_graph_coloring_greedy(adj_list, num_avail_rooms):
                 print(neighbor_timeslot)
                 print(current_course.get_neighbors())
                 # Set the room to the course
-                set_timeslot(current_course, num_avail_rooms, neighbor_timeslot)
+                set_timeslot(current_course, num_avail_timeslots, neighbor_timeslot) # for last node this is O(v^2) but for all previous nodes it is less than that
                 # Add neighbor nodes that don't have a room
+                #O(E)
                 for neighbor_course in current_course.get_neighbors():
                     #add the neighbor_course to the queue if the course isn't in the queue
                     #and if the course has not been visited yet.
-                    if (neighbor_course not in bfs_queue) and (neighbor_course not in visited):
+                    if (neighbor_course not in bfs_queue) and (neighbor_course not in visited): # not in bfs queue O(n) n is size of bfs queue; not in visited is O(n) n is size of visited; THESE BOTH HAPPEN 2 *E TIMES
                         bfs_queue.append(neighbor_course)
