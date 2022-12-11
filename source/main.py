@@ -32,10 +32,14 @@ Classes (spring):
 
 Time slots (fall): 
     MWF - 8-8:55am, 9:05-10am, 10:25-11:20am, 11:45am-12:40pm, 12:50-1:45pm (5 timeslots)
-    TTh - 8-9:20am, 9:30-10:50am, 12:50-2:50pm, 4-6pm, 6-6:55pm (5 timeslots)
+    TTh - 8-9:20am, 9:30-10:50am, 12:50-2:10pm, 4-6pm, 6-6:55pm (5 timeslots)
 Time slots (spring):
     MWF - 8-8:55am, 9:05-10am, 10:25am-11:20am, 11:45am-12:40pm, 12:50-1:45pm, 1:55-2:10pm, 6:30-9pm (7 timeslots)
     TTH - 8-9:20am, 9:30-10:50am, 12:50-2:10pm, 2:20-3:40pm (4 timeslots)
+
+    Methods:
+    1. Total time slots -> treat timeslots from TTh as unique timeslots on mwf (e.g. 8am mwf != 8am Tth)
+    2. subset -> divide into separate MWF and TTh days
 '''
 '''
 Profs: Kelsey Marcinko, Lindy Moyer, Martha Gady, Diana Schepens, Jordan Broussard, Nate Moyer, Immanual Manohar,
@@ -59,9 +63,12 @@ Time slots (spring):
 
 import math
 import random
-from graph_color import *
+import pandas as pd
+from graph_color_bfs import *
+from graph_color_degree import *
 from course import *
 from course_constrainer import *
+
 
 #TODO intialize elsewhere (not in main.py)
 ### Driver code
@@ -72,28 +79,27 @@ class_constraints = [('C1', 'C4'), ('C2', 'C7'), ('C6', 'C8'), ('C1', 'C8')]
 course_constr.add_profs(profs)
 course_constr.add_course_constraints(class_constraints)
 
-
-x = course_constr.gen_graph()
-print(x)
-
-create_graph_coloring_greedy(x, 2, 2) #graph color with limited number of timeslots
-
-for course in x:
+course_list = course_constr.gen_graph() #a normal list of courses, e.g. [c1, c2, ..., c_n]
+print(f"sorted on num constraints: {sort_on_constraints(course_list)}")
+for course in course_list:
+    print(f'{course.course_id}: {course.get_neighbors()}')
+#create graph coloring with x = adj list of courses, 3 = num avail timeslots, 2 = num avail rooms
+#create_graph_coloring_greedy(course_list, 3, 2) #graph color with limited number of timeslots
+create_graph_coloring_degree(course_list, 5, 10)
+for course in course_list:
     print(course)
 
-#create_graph_coloring_greedy(x)
-
-# # Assign classes to profs randomly
-# prof_to_class_dict = random_assign_class_to_profs(classes, profs)
-# print(prof_to_class_dict)
-
-# # generate graph adjacency list with both implicit and explicit
-# graph_adj_list = gen_graph(prof_to_class_dict, class_constraints)
-# print(graph_adj_list)
 
 
-# class2 = Course()
-# class1 = Course('p1', 'blue')
-# print(helloworld()) #LIAR
-# print(class1, class2)
-#print(class2.color)
+course_table = []
+for course in course_list:
+    id = course.get_course_id()
+    prof = course.get_professor()
+    time = course.get_timeslot()
+    room = course.get_room()
+    course_table.append([id, prof, time, room])
+    #output_df.([id, prof, time, room])
+output_df = pd.DataFrame(course_table)
+output_df.columns = ['Course', 'Professor', 'Timeslot', 'Room']
+print(output_df.sort_values(by='Course'))
+#print(output_df.loc[output_df['Professor'] == 'P1'])

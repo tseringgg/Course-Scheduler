@@ -15,8 +15,6 @@ from course import *
 
 
 
-
-
 #assigns the course to a room based on the room assignments of other classes (basically greedy coloring)
 #inputs - current course class that doesn't have a room assigned, number of rooms available, 
 #         number of rooms available in total as an integer, and a list of neighbors to the course
