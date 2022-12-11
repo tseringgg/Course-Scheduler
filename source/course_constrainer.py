@@ -1,3 +1,5 @@
+#12/10/2022 by Aaron Borjas, Connor Weldy, Jorjei Ngoche for CS473 adv. algorithms taught by Dr. Kent Jones
+
 #Course constrainer is ONLY to hold information for initialization of the graph/courses
 #this class does not handle any of the graph coloring stuff, the most it does is
 #set up the adjacency list for graph coloring.
@@ -29,6 +31,13 @@ class Course_Constrainer:
     def add_course_constraints(self, constraint_list):
         for constraint in constraint_list:
             self.add_course_constraint(constraint)
+
+    def add_random_course_constraints(self):
+        pass
+
+    def clear_course_constraints(self):
+        for x in self.course_list:
+            x.clear_neighbors()
 
     def get_course(self, course_name):
         for course in self.course_list:

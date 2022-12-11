@@ -1,4 +1,4 @@
-
+#12/10/2022 by Aaron Borjas, Connor Weldy, Jorjei Ngoche for CS473 adv. algorithms taught by Dr. Kent Jones
 #helper class to organize our data in the scheduling/graph coloring final project.
 class Course:
     def __init__(self, course_id='default course'):
@@ -13,31 +13,47 @@ class Course:
     def __repr__(self):
         return self.course_id
     
+    #function for displaying information of a course
     def __str__(self):
         #return self.course_id
         return f"Course: {self.course_id}, Prof: {self.professor}, Timeslot: {self.timeslot}, Room: {self.room}"
     
+    #=========== various getters and setters ==============
+
     def add_neighbor(self, course):
         self.neighbors.append(course)
+    
+    def remove_neighbor(self,course):
+        self.neighbors.remove(course)
+    
+    def clear_neighbors(self):
+        self.neighbors.clear()
     
     def set_professor(self, professor):
         self.professor = professor
     
+    def get_professor(self):
+        return self.professor
+    
     def set_timeslot(self, time):
         self.timeslot = time
-    
+
     def set_room(self, room):
         self.room = room
 
     def get_room(self):
         return self.room
     
+    def get_course_id(self):
+        return self.course_id
+
     def get_neighbors(self):
         return self.neighbors
 
     def get_timeslot(self):
         return self.timeslot
     
+    #another getter but gets the specific timeslots (colors) of the neighbors
     def get_neighbor_timeslots(self):
         neighbor_timeslots = set()
         for n in self.neighbors:
