@@ -1,8 +1,9 @@
 #12/10/2022 by Aaron Borjas, Connor Weldy, Jorjei Ngoche for CS473 adv. algorithms taught by Dr. Kent Jones
 #helper class to organize our data in the scheduling/graph coloring final project.
 class Course:
-    def __init__(self, course_id='default course'):
+    def __init__(self, course_id='default course', c_name='default name'):
         self.course_id = course_id
+        self.course_name = c_name
         self.professor = 'no professor'
         self.timeslot = -1 # color in graph
         self.room = -1

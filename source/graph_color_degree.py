@@ -19,5 +19,4 @@ def create_graph_coloring_degree(courses, num_avail_timeslots, num_rooms):
     rooms_used = [0]*num_avail_timeslots #index is timeslot, value is number of rooms used
     for current_course in sorted_courses_list: #make sure we cover all the courses -> O(V) if fully disconnected
         # Get rooms of neighbors:
-        
         set_timeslot_and_room(current_course, num_avail_timeslots, rooms_used, num_rooms) # for last node this is O(v^2) but for all previous nodes it is less than that

@@ -72,13 +72,39 @@ from course_constrainer import *
 
 #TODO intialize elsewhere (not in main.py)
 ### Driver code
+
+cs_draft_schedule = pd.read_csv('CS Draft Schedule 22-23.csv')
+fall_draft_schedule = cs_draft_schedule.loc[cs_draft_schedule['Semester'] == 'Fall']
+fall_courses = fall_draft_schedule['Course']
+fall_profs = list(fall_draft_schedule['Professor'].unique()) # list
+fall_profs.remove('STAFF')
+
+course_constr = Course_Constrainer()
+for i in range(fall_courses.shape[0]): # for every row in fall_courses
+    c_id = f'C{i}' # Course Id
+    c_name = fall_courses.iloc[i] # Get value at index location i in fall_courses dataframe
+    course_constr.add_course(c_id, c_name)
+course_constr.add_profs(fall_profs)
+course_constr.add_same_course_constraints()
+#class_constraints = [('C8', 'C10'), ('C9', 'C10'), ('C8','C11'), ('C9', 'C11'), ('C10', 'C11'),  ]
+#[('C2', 'C3'), ('C2', 'C4'), ('C2', 'C5'), ('C3', 'C4'), ('C3', 'C5'), ('C4', 'C5'), \ 
+                         #]
+
+
+#course_constr.add_same_course_constraints()
+
+
+
+'''
+Example from diagrams
 course_constr = Course_Constrainer()
 course_constr.add_courses(['C1','C4','C7','C2','C5','C8','C3','C6'])
 profs = ['P1', 'P2', 'P3']
 class_constraints = [('C1', 'C4'), ('C2', 'C7'), ('C6', 'C8'), ('C1', 'C8')]
 course_constr.add_profs(profs)
 course_constr.add_course_constraints(class_constraints)
-
+'''
+'''
 course_list = course_constr.gen_graph() #a normal list of courses, e.g. [c1, c2, ..., c_n]
 print(f"sorted on num constraints: {sort_on_constraints(course_list)}")
 for course in course_list:
@@ -103,3 +129,4 @@ output_df = pd.DataFrame(course_table)
 output_df.columns = ['Course', 'Professor', 'Timeslot', 'Room']
 print(output_df.sort_values(by='Course'))
 #print(output_df.loc[output_df['Professor'] == 'P1'])
+'''

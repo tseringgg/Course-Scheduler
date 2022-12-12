@@ -12,11 +12,11 @@ class Course_Constrainer:
     
     def set_courses(self, courses):
         self.course_list = courses
-    def add_course(self, course):
-        self.course_list.append(Course(course))
-    def add_courses(self, courses):
-        for course in courses:
-            self.add_course(course)
+    def add_course(self, course, name):
+        self.course_list.append(Course(course, name))
+    # def add_courses(self, courses):
+    #     for course in courses:
+    #         self.add_course(course)
     def add_prof(self, prof):
         self.prof_list.append(prof)
     def add_profs(self, prof_list):
@@ -31,6 +31,21 @@ class Course_Constrainer:
     def add_course_constraints(self, constraint_list):
         for constraint in constraint_list:
             self.add_course_constraint(constraint)
+
+    #adds constraints so that all sections of a course cannot be at the same time
+    def add_same_course_constraints(self):
+        #makes a dictionary with keys being unique course names and values are lists of course ids which will be appended to course_constraints
+        course_occurrence = {c: [] for c in set([cl.course_name for cl in self.course_list])}
+        for c in self.course_list:
+            course_occurrence[c.course_name].append(c.course_id)
+        print(course_occurrence)
+        # Need to make constraints
+        #want to use add_course_constraints(self, constraint_list):
+        # for c in course_occurrence.keys():
+        #     if course_occurrence[c] > 1:
+                
+                #self.course_constraints
+                
 
     def add_random_course_constraints(self):
         pass
