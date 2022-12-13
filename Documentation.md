@@ -22,15 +22,11 @@ DEGREE EMPIRICAL RATIO:
 
 
 HYPOTHETICAL RATIO: 
-greedy-bfs-based coloring: (2(4v^3 + e))/(v^3+e)
-v = 21, e = 84, 2v = 42, 2e = 152 (2(4v^3 + e))/(v^3+e) = 7.94607
-v = 42, e = 152, 2v = 84, 2e = 304 (2(4v^3 + e))/(v^3+e) = 7.98772
+greedy-bfs-based coloring: O(V+E)
+2V+2E / V+E == 2
+v = 21, e = 84, 2v = 42, 2e = 152 (2V+2E)/(V+E) = 2
 
-    #WORST CASE BFS: V + E + V*(V+N)
-    #AVERAGE CASE BFS: V + E + V*N
-    2V + 2E + 2V * (2V + 2N)
-    
+degree-based coloring: Average Case: O(V + VlogV)
+(2V + 2Vlog2V)/(V + VlogV) == 2
 
-degree-based coloring:
-    Worst Case: O(V*(V*N) + VlogV)
-    Average Case: O(V + VlogV)
+

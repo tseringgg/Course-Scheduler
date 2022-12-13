@@ -26,18 +26,14 @@ def set_timeslot_and_room(current_course, num_avail_timeslots, rooms_used, numbe
     neighbor_timeslots = current_course.get_neighbor_timeslots()
     #worse case - min(neighbors of curr course, num_avail_timeslots) -> O(E) E + 1
     for timeslot in range(1,num_avail_timeslots+1): #at worst O(n), n = num_avail_timeslots
-
         # check how many times timeslot has been used
         #number_of_times(timeslot) < rooms_available:
-        
         if (timeslot not in neighbor_timeslots) and (rooms_used[timeslot-1] < number_rooms_available): #avg case O(1), worse case O(V) efficiency (hashing collisions)
             current_course.set_timeslot(timeslot)
             current_course.set_room(rooms_used[timeslot-1])
             max_timeslot = timeslot
             rooms_used[timeslot-1] += 1
-            break # gets lowest available timeslot
-    
-    
+            break # gets lowest available timeslo
         
     return max_timeslot
     
@@ -79,8 +75,7 @@ def create_graph_coloring_greedy(adj_list, num_avail_timeslots, num_rooms):
     bfs_queue = []
     visited = set()
 
-    #WORST CASE BFS: V + E + V*(V+N)
-    #AVERAGE CASE BFS: V + E + V*N
+    #AVERAGE CASE BFS: V + E
     for course in adj_list: #make sure we cover all the courses -> O(V) if fully disconnected
         if course.get_room() == -1: # if course does not have a room yet
             bfs_queue.append(course) # add to end of queue
