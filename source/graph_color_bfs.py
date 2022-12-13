@@ -22,7 +22,6 @@ from course import *
 #worst case: O(n + v) where n is number of time slots v is num verts, avg case: O(n)
 # XXXXXXXaverage time complexity: O(V), where V is the # of adjacent vertices worse case is O(V^2)
 def set_timeslot_and_room(current_course, num_avail_timeslots, rooms_used, number_rooms_available):
-    max_timeslot = 0
     neighbor_timeslots = current_course.get_neighbor_timeslots()
     #worse case - min(neighbors of curr course, num_avail_timeslots) -> O(E) E + 1
     for timeslot in range(1,num_avail_timeslots+1): #at worst O(n), n = num_avail_timeslots
@@ -31,11 +30,8 @@ def set_timeslot_and_room(current_course, num_avail_timeslots, rooms_used, numbe
         if (timeslot not in neighbor_timeslots) and (rooms_used[timeslot-1] < number_rooms_available): #avg case O(1), worse case O(V) efficiency (hashing collisions)
             current_course.set_timeslot(timeslot)
             current_course.set_room(rooms_used[timeslot-1])
-            max_timeslot = timeslot
             rooms_used[timeslot-1] += 1
             break # gets lowest available timeslo
-        
-    return max_timeslot
     
 
 # create_graph_coloring_greedy function - colors a graph using a greedy algorithm. uses https://iq.opengenus.org/graph-colouring-greedy-algorithm/ as a reference

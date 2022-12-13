@@ -71,7 +71,7 @@ from course_constrainer import *
 import time
 
 # 
-cs_draft_schedule = pd.read_csv('Double CS Draft Schedule 22-23.csv')
+cs_draft_schedule = pd.read_csv('CS Draft Schedule 22-23.csv')
 #cs_draft_schedule = pd.read_csv('Double CS Draft Schedule 22-23.csv')
 
 fall_draft_schedule = cs_draft_schedule.loc[cs_draft_schedule['Semester'] == 'Fall']
@@ -88,23 +88,46 @@ course_constr.add_profs(fall_profs) #implicit constrait - profs can't teach two 
 course_constr.add_same_course_constraints() #implicit constraint - sections of course can't be taught at same time
 #print(course_constr.course_constraints)
 
-course_constr.add_profs(["Dr.J", "QM", "PT", "SG", "MB"])
+#course_constr.add_profs(["Dr.J", "QM", "PT", "SG", "MB"])
 course_list = course_constr.gen_graph() #just a lil list of courses
 count = 0
 for c in course_list:
     #print(f"{c.course_id} - {c.get_neighbors()}")
     count+= len(c.get_neighbors())
 print(f"COUNT: {count}")  
+
+num_timeslots = 5 #5 total timeslots available for teachers to teach
+num_rooms = 5 #5 total rooms available for each timeslot
+#in total, we have num_rooms*num_timeslots rooms available in total. If we notice
+#that the number total input classes is greater than num_rooms * num_timeslots,
+#the problem is considered "unsolvable"
+
 #create graph coloring with x = adj list of courses, 3 = num avail timeslots, 2 = num avail rooms
-# start_time = time.time()
-# create_graph_coloring_greedy(course_list, 11, 4) #graph coloring with 3 time slots, 2 rooms
-# greedy_time = time.time() - start_time
-# print(f"=======\ndegree time: {format(greedy_time, '.10f')}\n========")
 
 start_time = time.time()
-create_graph_coloring_degree(course_list, 11, 10)
+create_graph_coloring_greedy(course_list, num_timeslots, num_rooms) #graph coloring with 3 time slots, 2 rooms
+greedy_time = time.time() - start_time
+#print(f"=======\greedy time: {format(greedy_time, '.10f')}\n========")
+
+### OUTPUT
+course_table_greedy = []
+for course in course_list:
+    id = course.get_course_id()
+    name = course.get_name()
+    prof = course.get_professor()
+    my_time = course.get_timeslot()
+    room = course.get_room()
+    course_table_greedy.append([id, name, prof, my_time, room])
+    #output_df.([id, prof, time, room])
+output_df_greedy = pd.DataFrame(course_table_greedy)
+output_df_greedy.columns = ['Course', 'Name', 'Professor', 'Timeslot', 'Room']
+print(output_df_greedy.sort_values(by='Timeslot'))
+print(f"===============================\ngreedy-based time: {format(greedy_time, '.10f')}\n===============================")
+
+start_time = time.time()
+create_graph_coloring_degree(course_list, num_timeslots, num_rooms)
 degree_time = time.time() - start_time
-print(f"=======\ndegree time: {format(degree_time, '.10f')}\n========")
+#print(f"=======\ndegree time: {format(degree_time, '.10f')}\n========")
 
 
 ### OUTPUT
@@ -113,13 +136,14 @@ for course in course_list:
     id = course.get_course_id()
     name = course.get_name()
     prof = course.get_professor()
-    time = course.get_timeslot()
+    my_time = course.get_timeslot()
     room = course.get_room()
-    course_table.append([id, name, prof, time, room])
+    course_table.append([id, name, prof, my_time, room])
     #output_df.([id, prof, time, room])
 output_df = pd.DataFrame(course_table)
 output_df.columns = ['Course', 'Name', 'Professor', 'Timeslot', 'Room']
 print(output_df.sort_values(by='Timeslot'))
+print(f"===============================\ndegree-based time: {format(degree_time, '.10f')}\n===============================")
 #print(output_df.loc[output_df['Professor'] == 'P1'])
 
 '''
