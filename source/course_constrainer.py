@@ -38,13 +38,12 @@ class Course_Constrainer:
         course_occurrence = {c: [] for c in set([cl.course_name for cl in self.course_list])}
         for c in self.course_list:
             course_occurrence[c.course_name].append(c.course_id)
-        print(course_occurrence)
-        # Need to make constraints
-        #want to use add_course_constraints(self, constraint_list):
-        # for c in course_occurrence.keys():
-        #     if course_occurrence[c] > 1:
-                
-                #self.course_constraints
+        
+        # Creating constraints based off of same course name (different sections)
+        for sections in course_occurrence.values(): #for each unique course
+            for i in range(0, len(sections)-1):
+                for j in range(i+1, len(sections)):
+                    self.add_course_constraint((sections[i], sections[j]))
                 
 
     def add_random_course_constraints(self):

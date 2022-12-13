@@ -68,12 +68,12 @@ from graph_color_bfs import *
 from graph_color_degree import *
 from course import *
 from course_constrainer import *
+import time
 
+# 
+cs_draft_schedule = pd.read_csv('Double CS Draft Schedule 22-23.csv')
+#cs_draft_schedule = pd.read_csv('Double CS Draft Schedule 22-23.csv')
 
-#TODO intialize elsewhere (not in main.py)
-### Driver code
-
-cs_draft_schedule = pd.read_csv('CS Draft Schedule 22-23.csv')
 fall_draft_schedule = cs_draft_schedule.loc[cs_draft_schedule['Semester'] == 'Fall']
 fall_courses = fall_draft_schedule['Course']
 fall_profs = list(fall_draft_schedule['Professor'].unique()) # list
@@ -81,22 +81,49 @@ fall_profs.remove('STAFF')
 
 course_constr = Course_Constrainer()
 for i in range(fall_courses.shape[0]): # for every row in fall_courses
-    c_id = f'C{i}' # Course Id
+    c_id = f'C{i+1}' # Course Id
     c_name = fall_courses.iloc[i] # Get value at index location i in fall_courses dataframe
     course_constr.add_course(c_id, c_name)
-course_constr.add_profs(fall_profs)
-course_constr.add_same_course_constraints()
-#class_constraints = [('C8', 'C10'), ('C9', 'C10'), ('C8','C11'), ('C9', 'C11'), ('C10', 'C11'),  ]
-#[('C2', 'C3'), ('C2', 'C4'), ('C2', 'C5'), ('C3', 'C4'), ('C3', 'C5'), ('C4', 'C5'), \ 
-                         #]
+course_constr.add_profs(fall_profs) #implicit constrait - profs can't teach two courses at once
+course_constr.add_same_course_constraints() #implicit constraint - sections of course can't be taught at same time
+#print(course_constr.course_constraints)
+
+course_constr.add_profs(["Dr.J", "QM", "PT", "SG", "MB"])
+course_list = course_constr.gen_graph() #just a lil list of courses
+count = 0
+for c in course_list:
+    #print(f"{c.course_id} - {c.get_neighbors()}")
+    count+= len(c.get_neighbors())
+print(f"COUNT: {count}")  
+#create graph coloring with x = adj list of courses, 3 = num avail timeslots, 2 = num avail rooms
+# start_time = time.time()
+# create_graph_coloring_greedy(course_list, 11, 4) #graph coloring with 3 time slots, 2 rooms
+# greedy_time = time.time() - start_time
+# print(f"=======\ndegree time: {format(greedy_time, '.10f')}\n========")
+
+start_time = time.time()
+create_graph_coloring_degree(course_list, 11, 10)
+degree_time = time.time() - start_time
+print(f"=======\ndegree time: {format(degree_time, '.10f')}\n========")
 
 
-#course_constr.add_same_course_constraints()
-
-
+### OUTPUT
+course_table = []
+for course in course_list:
+    id = course.get_course_id()
+    name = course.get_name()
+    prof = course.get_professor()
+    time = course.get_timeslot()
+    room = course.get_room()
+    course_table.append([id, name, prof, time, room])
+    #output_df.([id, prof, time, room])
+output_df = pd.DataFrame(course_table)
+output_df.columns = ['Course', 'Name', 'Professor', 'Timeslot', 'Room']
+print(output_df.sort_values(by='Timeslot'))
+#print(output_df.loc[output_df['Professor'] == 'P1'])
 
 '''
-Example from diagrams
+#Example from diagrams
 course_constr = Course_Constrainer()
 course_constr.add_courses(['C1','C4','C7','C2','C5','C8','C3','C6'])
 profs = ['P1', 'P2', 'P3']

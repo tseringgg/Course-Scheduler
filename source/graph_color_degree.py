@@ -13,9 +13,9 @@ def sort_on_constraints(courses):
 #creates a graph coloring by starting at the highest degree vertices and navigating down
 #inputs - a list of courses (NOT sorted), integer number of available timeslots, and integer number of rooms 
 #outputs - no output, but changes timeslot and room values for the classes
-#Worse case: O(V^3+vlogv)
+#Worse case: O(V*n+VlogV)
 def create_graph_coloring_degree(courses, num_avail_timeslots, num_rooms):
-    sorted_courses_list = sort_on_constraints(courses) #courses sorted on degree in descending order
+    sorted_courses_list = sort_on_constraints(courses) #courses sorted on degree in descending order O(vlogv)
     rooms_used = [0]*num_avail_timeslots #index is timeslot, value is number of rooms used
     for current_course in sorted_courses_list: #make sure we cover all the courses -> O(V) if fully disconnected
         # Get rooms of neighbors:

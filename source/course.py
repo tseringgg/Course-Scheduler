@@ -17,7 +17,7 @@ class Course:
     #function for displaying information of a course
     def __str__(self):
         #return self.course_id
-        return f"Course: {self.course_id}, Prof: {self.professor}, Timeslot: {self.timeslot}, Room: {self.room}"
+        return f"ID: {self.course_id}, Course: {self.course_name}, Prof: {self.professor}, Timeslot: {self.timeslot}, Room: {self.room}"
     
     #=========== various getters and setters ==============
 
@@ -54,6 +54,9 @@ class Course:
     def get_timeslot(self):
         return self.timeslot
     
+    def get_name(self):
+        return self.course_name
+
     #another getter but gets the specific timeslots (colors) of the neighbors
     def get_neighbor_timeslots(self):
         neighbor_timeslots = set()

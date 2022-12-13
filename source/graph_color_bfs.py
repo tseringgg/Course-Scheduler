@@ -19,7 +19,8 @@ from course import *
 #inputs - current course class that doesn't have a room assigned, number of rooms available, 
 #         number of rooms available in total as an integer, and a list of neighbors to the course
 #outputs - no return values but sets the room value of the current course (colors it)
-# Overall time complexity: O(V^2), where V is the # of adjacent vertices 
+#worst case: O(n + v) where n is number of time slots v is num verts, avg case: O(n)
+# XXXXXXXaverage time complexity: O(V), where V is the # of adjacent vertices worse case is O(V^2)
 def set_timeslot_and_room(current_course, num_avail_timeslots, rooms_used, number_rooms_available):
     max_timeslot = 0
     neighbor_timeslots = current_course.get_neighbor_timeslots()
@@ -77,6 +78,9 @@ def create_graph_coloring_greedy(adj_list, num_avail_timeslots, num_rooms):
     #adj_list[0].set_room(1)
     bfs_queue = []
     visited = set()
+
+    #WORST CASE BFS: V + E + V*(V+N)
+    #AVERAGE CASE BFS: V + E + V*N
     for course in adj_list: #make sure we cover all the courses -> O(V) if fully disconnected
         if course.get_room() == -1: # if course does not have a room yet
             bfs_queue.append(course) # add to end of queue
