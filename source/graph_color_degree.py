@@ -1,5 +1,5 @@
 #graph coloring by coloring the high-degree nodes first
-#12/10/2022 by Aaron Borjas, Connor Weldy, Jorjei Ngoche
+#12/13/2022 by Aaron Borjas, Connor Weldy, Jorjei Ngoche
 #CS473 adv. algorithms, Dr. Kent Jones
 from graph_color_bfs import set_timeslot_and_room
 

@@ -1,101 +1,144 @@
-# Final Project
-Class: CS 473 - Advanced Algorithms 
-Last Modified: 11/1/2022
+# __Class Scheduling with Graph Coloring__
+Final Project Group Eagles
 
-## Overview
-The goal of the final project is to give you a chance to explore and apply an advanced algorithm to a real world problem. Advanced algorithm analysis forms much of the theoretical foundation of computer science.  Rather than require a comprehensive final exam, we would rather see you use your analytical and critical thinking abilities expressed towards accomplishing a goal of a producing a software product that implements something you are at least somewhat interested in. This document will outline the minimum basic expectations for the project and how you should implement and deliver that project, but you are encouraged to go above and beyond the minimum expectations. 
+Aaron Borjas, Connor Weldy, Jorjei Ngoche
 
+Last edited - December 13, 2022
 
-### Grade Break Down
-| Part                                           | Possible |  Actual    |
-|------------------------------------------------|----------|------------|
-| Documentation: Readme.md File                  | 20 pts   |            |    
-| Working Code submitted to whitgit              | 35 pts   |            |
-| Final Presentation & Analysis                  | 35 pts   |            | 
-| Final Reflection & Professionalism & Teamwork  | 10 pts   |            |
-| Total                                          | 100 pts  |            |
+CS473 Advanced Algorithms Design and Analysis, Dr. Kent Jones
 
-### General Requirements
-Overall this final project will contribute 30% of your overall grade for this class.  
-* As a group you must choose and implement an advanced algorithm and apply it to a real world problem.
-* You must compare the empirical (i.e. measured) efficiency of the algorithm to the theoretical efficiency of the algorithm you select. You must also use the __empirical doubling method__ as discussed in class.
-* Your group must also prepare and present a final group project presentation to the class during the final exam period.
-* You are highly encouraged (but not required) to find a __real world__ client with an actual, practical, algorithmic problem that actually needs solving. 
-* Your group can still do very well on the final project an actual client, however, those groups that show creativity, initiative, and effort beyond the requirements of this course will benefit. 
-* IMPORTANT: If you believe your group might wish to have Whitworth University as a client (as opposed to an individual professor), please first discuss this with me and do not approach __computing services__ directly. They have too much to worry about without fielding a lot of final project requests. If we decide your project rises to the level that the University be involved, I will represent Whitworth for you on your project.
-* You may either design a new algorithm of your own choosing or you may pick an algorithm from the literature that we have NOT yet discussed in class.
+# Project Description
+
+The goal of this project was to create a generic class scheduling algorithm for a department. In our situation, we based inputs on the Mathematics and Computer Science department from Whitworth University. We wanted to have an algorithm that could help analyze various limits in resources, particularly those listed below.
+
+At a base level, we wanted to consider timeslots available, rooms available, the number of professors, and the number of classes. Using this input we could build an algorithm to solve the graph coloring problem - graph coloring. In this approach, vertices are unique sections of all courses and edges between two vertices means that those two sections cannot be taught at the same time. We also call edges "constraints" in our documentation, which you may notice elsewhere. Then, colors represent different timeslots and each node of a certain color means different rooms used in that timeslot So, if we have 3 colors that means that the courses provided fit into 3 timeslots. Graph coloring is typically done by coloring connected vertices different colors. If there is an edge between two vertices, V1 and V2, they would have to be different colors. 
+
+ We used two variations of graph coloring algorithms, one which was "greedy" and based on Breadth First Search, and another which was based on the degree of vertices. The BFS-based algorithm is our greedy approach, because we navigate our way through the graph using BFS and color nodes based on the first color not used by their neighbors. In our degree-based method, we sort the nodes based on their degree (the number of edges of a vertex) and then color the highest-degree node(s) first, since this will eliminate certain colors from consideration for more nodes.
+
+# How to run the program
+
+To run this program, you will need all of the files in /final-project/source/ outside of the pycache folder. In addition, a csv of planned classes, including all sections of a course, is required. For an example, please see __Math Draft Schedule 22-23.csv__ or __CS Draft Schedule 22-23.csv__. At the very least, we require columns titled "Course", "Professor", and "Semester", since our input processing handles these cases. When you have these .csv files prepared and in the ./final-project/ directory, you will need to select "main.py" and execute it. We require python 3 at the very least, but recommend the latest version of python. On a mac, this can be run in the terminal on VSCode by running something similar to "/usr/local/bin/python3 "__path to project location__/final-project/source/main.py". When main is ran by python, that is it! You have run the project.
+
+# Assumptions
+When making this project, some assumptions we made included...
+* Users have enough knowledge to be able to run the program using VScode or the python command line.
+* All classes repeat the same number of times on every weekday. We did not really consider the timing of classes, such as different schedules for Monday/Wednesday/Friday compared to Tuesday/Thursday classes. We leave that up to the available timeslots of the department or university.
+* We assumed that professors are unavailable to teach more than one class at a time, since professors cannot be in two places at once.
+* We also assumed that sections of one class cannot be at the same time. For example, Computer Science I in our input data occurs four times, and our algorithm treats each section as unique.
+* Every professor can teach every class. This is not accurate as professors in real-world situations have preferences or certain levels of expertise in different topics, but we assumed this is not the case and that anybody can teach any class, distributing classes as such.
+* Professors do not have time slot preferences. Realistically, some professors prefer morning classes whereas others prefer afternoon/evening classes, but in this case that does not happen. Sort of a consequence of assumption 2.
+* Not all classrooms have to be used at the same time. This seems a bit intuitive for real-world situations, but it would be unrealistic for classrooms to require a class for our algorithm to function. 
+* Classes require timeslots for the algorithm to "work". The algorithm will function if this is not the case, but realistically if classes do not have a timeslot, there is/are a constraint(s) that is preventing the configuration from working correctly.
   
+# Pseudocode Design of Algorithms
 
-### Group Project Structure and Professionalism
-Groups will be assigned for this final project. Thus professional conduct when interacting with others will be important. If there are specific reasons you cannot participate in a group, you will be given a chance to state this when we collect group preference data for assigning the groups.
+## Greedy BFS-Based Algorithm
+BFS to find nodes to color, then separate color checker for nodes adjacent to node n.
 
-Desirable group behaviors are:
-* Following through on scheduled meetings (or texting/emailing if there is an emergency and a meeting can't be attended on time)
-* Practicing good listening skills and diplomacy when discussing issues or problems with the code. Instead of pointing blame, focus on fixing issues.
-* Treating your group partner(s) the way you wish to be treated. 
+    def graph_color_greedy(list_of_courses, num_timeslots, num_rooms)
+        rooms_used = [0]*num_timeslots
+        add first node to queue
+        color first node as first color
+        for curr_course in list:
+            check if curr_course is colored, if not then add to queue
+            add curr_course to visited set
+            while queue not empty
+                course = course_list.pop(0)
+                if course not colored #(no timeslot assigned)
+                    get neighbors of course
 
-In addition, since this project will be completed as a group, all code should be written utilizing pair programming, this means that:
-* All group members will be present (preferably in person) and actively engaged when working on the code together. 
-* Design and document the algorithm(s) with pseudo-code as a group before coding. 
-* The group should all be present for coding. 
-* Group members should take turns coding and directing.
-* The rest of the work may be divided among the group members however, all group members should review all work before submitting it.
-* Reliability in attending meetings and participation will all be a part of your final grade for this project. 
+                    #choose lowest numbered timeslot (color) and room available
+                    set_timeslot_and_room(course, num_timeslots, rooms_used, num_rooms)
+                    add neigbors to queue that arent colored (visited) and not already in queue
+
+## Degree-Based Algorithm
+Uses python's Timsort (O(Vlog_2(V)) to sort vertices on degree (number of constraints per vertex) in descending order (most degree -> lowest degree), then colors the nodes in that order based on neighbor nodes' colors.
+
+    def graph_color_degree(list, num_timeslots, num_rooms)
+        sorted_courses_list = sort list on len(list item neighbors), order = descending
+        rooms_used = [0]*num_timeslots
+        for curr_course in sorted_courses_list
+            set_timeslot_and_room(curr_course, num_timeslots, rooms_used, num_rooms)
+
+## Important helper function: set_timeslot_and_room
+This function works in constant time based on the number of timeslots available and neighbors of the current node to set the timeslot (color) of the node.
+
+    def set_timeslot_and_room(course, num_timeslots, rooms_used, num_rooms)
+        neighbor_timeslots = neighbors of course
+        for timeslot in num_timeslots
+            if timeslot not in neighbor_timeslots and rooms_used[timeslot] < num_rooms
+                set course timeslot (color)
+                set course room
+                increment the room count in rooms_used[timeslot]
+                break
+
+
+
+
+# Algorithm Analysis - Doubling Method
+## 1. Estimate Runtime Hypothesis using worst/average case
+
+* V: Vertices represent courses.
+* E: Edges connect two courses that can't be scheduled at the same time (1 edge = 1 constraint).
+* Colors - unique timeslots
+
+Greedy-bfs-based coloring: O(V + E)
+
+Degree-based coloring: O(V + VlogV)
+
+## 2. Perform Emprical Tests
+### Empirical speeds (N inputs)
+Inputs and Constraints:
+* 21 courses (vertices)
+* 5 professors - implicitly 84 course neighbors (edges)
+* 11 available time slots (constraint)
+* 10 available rooms per time slot (constraint)
+
+Greedy-bfs-based coloring: 0.0000770092 seconds => 77.0 microseconds
+
+Degree-based coloring: 0.0000438690 seconds => 43.8 microseconds
+
+### Empirical speeds (2N inputs)
+Inputs and Constraints:
+* 42 courses (vertices)
+* 10 professors - implicitly 152 course neighbors (edges)
+* 11 available time slots (constraint)
+* 10 available rooms per time slot (constraint)
   
-All documents, with the exception of the individual feedback sent via email, will be submitted via Whitgit. You and your partner have access to a group project folder. The most recent "active" main branch will be the branch of your project that is graded.
+We doubled the number of classes and professors available. Some overlap in constraints produced less edges than if we had just doubled the number of edges explicitly (e.g. professors cannot teach more than one class during one timeslot, sections of one course cannot be in the same timeslot).
 
-### Project Description and Ideas
-You must not simply follow an online tutorial or submit existing projects found online as your own code. You may look at resources for ideas, you may use other libraries, but, the main design and coding of the algorithm for your project should be original work, designed, created and coded by the group as a whole. 
+Greedy-bfs-based coloring: 0.0001511574 => 151.1 microseconds
 
-Here are some ideas
+Degree-based coloring: 0.0000860691 => 86.07 microseconds
 
-* Non Profit Delivery Application: Use a map interface to select delivery points. Compute the optimal route to those points.
-* Other application for a client of your choosing that requires an efficient optimization algorithm.
-* Optimization algorithm with easy to use interface for delivery of students on C.B.D.
-* Bioinformatics algorithm implementation - (many possibilities here: alignment, DNA assembly, etc.).
-* Computational Geometry: Delaunay triangulation, Voronoi diagram, etc. algorithm implementation.
-* Boolean satisfiability algorithm – write a SAT solver describe how it works compare it to other SAT solvers
-* Numerical Analysis Algorithms (iterative row improvement, etc.)
-* Fast Fourier Transform (FFT) algorithm implementation. Use your algorithm to find the frequency decomposition of actual sound clips.
-* Other selected advanced algorithms topics or clients of your choice that were not covered in class.
+## 3. Confirm/Disprove Your Hypothesis
+### Greedy Method Empirical Ratio
 
-### Deliverable #1: Paragraph Project Proposal Due Wed Nov 16
-Please push your Paragraph Proposal to your Whitgit Folder for your project group.
+151.1 microseconds / 77.0 microseconds = __1.96__
 
-I highly encourage each group to make a short project proposal to your instructor before you proceed. You don't want to be that group which at presentation time finds that their project was not sufficient!  Take the time to communicate with your instructor and determine if the level of difficulty is acceptable. Write up the project paragraph. Discuss this with your instructor before or on the due date. This paragraph can eventually become a part of your projects Readme.md file.
+### Degree Method Empirical Ratio
 
-### Deliverable #2: Final Project Code and Readme.md Documentation File Due at the Final in the Groups Assigned Whitgit Repository
-Your group will submit a Readme.md file along with your with all the code for your project to your shared Whitgit final project repository. This Readme.md file will contain
-* The title of your final project program.
-* A short description of the purpose and goals of the program, and a description of the algorithmic approach used to solve the problem. 
-* Documentation on how to run the program.
-* What assumptions did you make when working on the project (e.g. knowledge level of users, etc.)?
-* A detailed pseudo-code design for the algorithm. 
-* The documentation for this project is worth 6% of your overall grade for the course so make it representative of that weight. A single page document will likely not be detailed enough.
-* Your code must be appropriately commented. This includes headers for every method/function and file headers.
-* __Works Cited__ This should includes any third party libraries used, any online sources and any code utilized that was not specifically written for this project. These citations should also be listed directly in your code.
+86.07 microseconds / 43.8 microseconds = __1.97__
 
-### Deliverable #3: Final Presentation at the Final 
-During the final time for your section, your group will give a presentation on the work that you accomplished. 
-* If your team wants to present early (i.e. on Monday of Finals week) you may. Please confirm with your instructor.
-* Your team must give a talk describing your algorithm. Time allotted to each group will be determined by an even division of 2 hours / (# of groups + 1).
-* You must demonstrate your algorithm running.
-* You must present an __algorithm analysis__ of the worst case run time for your algorithm and compare this analytical runtime to the actual empirical runtime results using the period doubling method as described in class.
+### Hypothetical Ratios
 
-### Deliverable #4: Individual Project Reflection (Microsoft Forms Link Will be Provided)
-Each group (at the start of the project) will make a group contract, which, will be evaluated by a Microsoft Forms link provided. 
+Greedy-bfs-based coloring: O(V+E)
 
-The questions on the form will be reflective in nature and likely very similar to these shown here:
-* What group were you with?
-* Please rate how well you feel your group worked together (1 star - O=Poorly 3-Average 5-Excellent) 
-* Please rate how well you worked at contributing to the group as a whole.
-* Do you feel like your ideas were listened to by other group members?
-* Did group members treat each other professionally and with respect?
-* Were you able to contribute at the level you wanted to, and if not, what ideas do you have to ensure that you will be able to contribute to future group projects?
-* Did all the group members in the group hold up their end of the individual group contract?
-* Did you and your team made good team decisions, or did your or other team members make major decisions without first talking to the team as a whole?
-* Did you and your team members shown passion/interest/enthusiasm for what you are building?
-* What should you and your team keep doing well in the future?
-* If there were issues, what improvements can you and your team make in the future to avoid them?
-* Anything else you want to communicate?
+(2V+2E)/(V+E) = __2__
 
+Degree-based coloring: Average Case: O(V + VlogV)
+
+(2V + 2Vlog2V)/(V + VlogV) = __2__
+
+### __Final analysis, hypothesis confirmation__
+Greedy empirical ratio is about equal to the hypothetical ratio: __1.96 ~= 2__
+
+Degree-based empirical ratio is about equal to the hypothetical ratio: __1.97 ~= 2__
+
+
+# Works Cited
+
+1. (course_constrainer.py) How to distribute list values evenly in a list - https://stackoverflow.com/questions/53144723/python-evenly-distribute-value-to-a-list-in-a-dictionary  
+2. (course.py) How to print a list of user-defined objects - https://stackoverflow.com/questions/12933964/printing-a-list-of-objects-of-user-defined-class
+3. (graph_color_degree.py) Details on timsort, the method used in python's default sorted() method: https://en.wikipedia.org/wiki/Timsort, https://www.geeksforgeeks.org/timsort/
+4. (graph_color_bfs.py) Referenced this to start working on BFS-based greedy graph coloring https://iq.opengenus.org/graph-colouring-greedy-algorithm/

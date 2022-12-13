@@ -13,25 +13,23 @@ from course import *
 #   e.g. initially 4 timeslots [0 0 0 0] -> [1 0 0 0] -> ... -> 
 #   [1 1 1 0] (in this one, choose last index) -> [1 1 1 1] -> etc
 
-
-
-#assigns the course to a room based on the room assignments of other classes (basically greedy coloring)
-#inputs - current course class that doesn't have a room assigned, number of rooms available, 
-#         number of rooms available in total as an integer, and a list of neighbors to the course
-#outputs - no return values but sets the room value of the current course (colors it)
-#worst case: O(n + v) where n is number of time slots v is num verts, avg case: O(n)
-# XXXXXXXaverage time complexity: O(V), where V is the # of adjacent vertices worse case is O(V^2)
+# assigns the course to a room based on the room assignments of other classes (basically greedy coloring)
+# inputs - current course class that doesn't have a room assigned, number of rooms available, 
+#          number of rooms available in total as an integer, and a list of neighbors to the course
+# outputs - no return values but sets the room value of the current course (colors it)
+# average time complexity: O(1), where V is the # of adjacent vertices worse case is O(V)
 def set_timeslot_and_room(current_course, num_avail_timeslots, rooms_used, number_rooms_available):
-    neighbor_timeslots = current_course.get_neighbor_timeslots()
-    #worse case - min(neighbors of curr course, num_avail_timeslots) -> O(E) E + 1
-    for timeslot in range(1,num_avail_timeslots+1): #at worst O(n), n = num_avail_timeslots
+    neighbor_timeslots = current_course.get_neighbor_timeslots() # get_neighbor_timeslots() returns a set of timeslots
+
+    # gets next available timelost that is not used by a neighbor course and that hasn't been used a max number of times
+    for timeslot in range(1,num_avail_timeslots+1):
         # check how many times timeslot has been used
-        #number_of_times(timeslot) < rooms_available:
+        # number_of_times(timeslot) < rooms_available:
         if (timeslot not in neighbor_timeslots) and (rooms_used[timeslot-1] < number_rooms_available): #avg case O(1), worse case O(V) efficiency (hashing collisions)
             current_course.set_timeslot(timeslot)
             current_course.set_room(rooms_used[timeslot-1])
             rooms_used[timeslot-1] += 1
-            break # gets lowest available timeslo
+            break # gets lowest available timeslot
     
 
 # create_graph_coloring_greedy function - colors a graph using a greedy algorithm. uses https://iq.opengenus.org/graph-colouring-greedy-algorithm/ as a reference
@@ -43,6 +41,7 @@ def set_timeslot_and_room(current_course, num_avail_timeslots, rooms_used, numbe
 # output: returns a set of Courses, with all items having the color assigned using graph
 #           coloring methods.
 def create_graph_coloring_greedy(adj_list, num_avail_timeslots, num_rooms):
+        
     rooms_used = [0]*num_avail_timeslots #index is timeslot, value is number of rooms used
 
     # Color first vertex with first color
